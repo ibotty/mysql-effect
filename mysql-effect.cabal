@@ -24,6 +24,7 @@ library
                      , bytestring 
                      , extensible-effects >=1.5 && <1.6
                      , mysql-simple >=0.2 && <0.3
+                     , mysql >=0.1.1.6
   hs-source-dirs:      src
   default-language:    Haskell2010
 

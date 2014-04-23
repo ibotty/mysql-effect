@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE StandaloneDeriving #-}
@@ -42,7 +41,6 @@ import Control.Eff.MySQL.Helper
 import Control.Eff.Reader.Strict
 import Data.ByteString (ByteString)
 import Data.Int (Int64)
-import Data.Typeable (Typeable)
 import Data.Word (Word64)
 import qualified Database.MySQL.Simple as M
 import qualified Database.MySQL.Simple.QueryParams as M
@@ -50,8 +48,6 @@ import qualified Database.MySQL.Simple.QueryResults as M
 
 
 type MySQL = Reader M.Connection
-
-deriving instance Typeable M.Connection
 
 -- | Run the MySQL effect. In case of exceptions it will not close the
 -- connection. (That will still be done by the GC at one point.)
