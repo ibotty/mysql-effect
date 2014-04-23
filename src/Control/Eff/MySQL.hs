@@ -1,8 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE OverloadedStrings #-}
 -- | A thin MySQL effect.
 --
 -- See the documentation of 'mysql-simple' for details regarding the
@@ -47,8 +45,6 @@ import Data.Word (Word64)
 import qualified Database.MySQL.Simple as M
 import qualified Database.MySQL.Simple.QueryParams as M
 import qualified Database.MySQL.Simple.QueryResults as M
-
-import Data.Typeable
 
 type MySQL = Reader M.Connection
 
