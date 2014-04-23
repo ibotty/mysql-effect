@@ -1,6 +1,8 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE OverloadedStrings #-}
 -- | A thin MySQL effect.
 --
 -- See the documentation of 'mysql-simple' for details regarding the
@@ -46,13 +48,14 @@ import qualified Database.MySQL.Simple as M
 import qualified Database.MySQL.Simple.QueryParams as M
 import qualified Database.MySQL.Simple.QueryResults as M
 
+import Data.Typeable
 
 type MySQL = Reader M.Connection
 
 -- | Run the MySQL effect. In case of exceptions it will not close the
 -- connection. (That will still be done by the GC at one point.)
 runMySQL
-  :: (SetMember Lift (Lift IO) r)
+  :: (Member (Lift IO) r)
   => Eff (MySQL :> r) a -> M.ConnectInfo -> Eff r a
 runMySQL e c = do
     conn <- lift $ M.connect c
@@ -66,81 +69,81 @@ runMySQLWithConnection = runReader
 
 -- | See 'M.query' for details.
 query
-  :: ( SetMember Lift (Lift IO) r, Member MySQL r
+  :: ( Member (Lift IO) r, Member MySQL r
     , M.QueryResults a, M.QueryParams p)
   => M.Query -> p -> Eff r [a]
 query = askLift2 M.query
 
 -- | See 'M.query_' for details.
 query_
-  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults a)
+  :: (Member (Lift IO) r, Member MySQL r, M.QueryResults a)
   => M.Query -> Eff r [a]
 query_ = askLift M.query_
 
 -- -- | See 'M.fold' for details.
 -- fold
---   :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults b, M.QueryParams p)
+--   :: (Member (Lift IO) r, Member MySQL r, M.QueryResults b, M.QueryParams p)
 --   => M.Query -> p -> a -> (a -> b -> Eff r a) -> Eff r [a]
 -- -- | See 'M.fold_' for details.
 -- fold_
---   :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults b)
+--   :: (Member (Lift IO) r, Member MySQL r, M.QueryResults b)
 --   => M.Query -> q -> a -> (a -> b -> Eff r a) -> Eff r [a]
 -- -- | See 'M.forEach' for details.
 -- forEach
---   :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults b, M.QueryParams p)
+--   :: (Member (Lift IO) r, Member MySQL r, M.QueryResults b, M.QueryParams p)
 --   => M.Query -> p -> (b -> Eff r ()) -> Eff r ()
 -- -- | See 'M.forEach_' for details.
 -- forEach_
---   :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults b)
+--   :: (Member (Lift IO) r, Member MySQL r, M.QueryResults b)
 --   => M.Query -> (b -> Eff r ()) -> Eff r ()
 
 -- | See 'M.execute' for details.
 execute
-  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> p -> Eff r Int64
 execute = askLift2 M.execute
 
 -- | See 'M.execute_' for details.
 execute_
-  :: (SetMember Lift (Lift IO) r, Member MySQL r)
+  :: (Member (Lift IO) r, Member MySQL r)
   => M.Query -> Eff r Int64
 execute_ = askLift M.execute_
 
 -- | See 'M.executeMany' for details.
 executeMany
-  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> [p] -> Eff r Int64
 executeMany = askLift2 M.executeMany
 
 -- | See 'M.insertID ' for details.
-insertID :: (SetMember Lift (Lift IO) r, Member MySQL r) => Eff r Word64
+insertID :: (Member (Lift IO) r, Member MySQL r) => Eff r Word64
 insertID = askLift0 M.insertID
 
 -- -- | See 'M.withTransaction' for details.
 -- withTransaction
---   :: (SetMember Lift (Lift IO) r, Member MySQL r)
+--   :: (Member (Lift IO) r, Member MySQL r)
 --   => Eff r a -> Eff r a
 
 -- | See 'M.autocommit ' for details.
-autocommit :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Bool -> Eff r ()
+autocommit :: (Member (Lift IO ) r, Member MySQL r) => Bool -> Eff r ()
 autocommit = askLift M.autocommit
 
 -- | See 'M.commit ' for details.
-commit :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Eff r ()
+commit :: (Member (Lift IO ) r, Member MySQL r) => Eff r ()
 commit = askLift0 M.commit
 
 -- | See 'M.rollback ' for details.
-rollback :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Eff r ()
+rollback :: (Member (Lift IO ) r, Member MySQL r) => Eff r ()
 rollback = askLift0 M.rollback
 
 -- | See 'M.formatMany' for details.
 formatMany
-  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> [p] -> Eff r ByteString
 formatMany = askLift2 M.formatMany
 
 -- | See 'M.formatQuery' for details.
 formatQuery
-  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> p -> Eff r ByteString
 formatQuery = askLift2 M.formatQuery
