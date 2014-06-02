@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                mysql-effect
-version:             0.2.0.1
+version:             0.2.0.2
 synopsis:            An extensible mysql effect using extensible-effects and mysql-simple
 description:         Any help (especially documentation) is very welcome,
 homepage:            https://github.com/ibotty/mysql-effect
