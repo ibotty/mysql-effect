@@ -50,7 +50,7 @@ type MySQL = Reader M.Connection
 -- | Run the MySQL effect. In case of exceptions it will not close the
 -- connection. (That will still be done by the GC at one point.)
 runMySQL
-  :: (Member (Lift IO) r)
+  :: (SetMember Lift (Lift IO) r)
   => Eff (MySQL :> r) a -> M.ConnectInfo -> Eff r a
 runMySQL e c = do
     conn <- lift $ M.connect c
@@ -64,14 +64,14 @@ runMySQLWithConnection = runReader
 
 -- | See 'M.query' for details.
 query
-  :: ( Member (Lift IO) r, Member MySQL r
+  :: ( SetMember Lift (Lift IO) r, Member MySQL r
     , M.QueryResults a, M.QueryParams p)
   => M.Query -> p -> Eff r [a]
 query = askLift2 M.query
 
 -- | See 'M.query_' for details.
 query_
-  :: (Member (Lift IO) r, Member MySQL r, M.QueryResults a)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryResults a)
   => M.Query -> Eff r [a]
 query_ = askLift M.query_
 
@@ -94,24 +94,24 @@ query_ = askLift M.query_
 
 -- | See 'M.execute' for details.
 execute
-  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> p -> Eff r Int64
 execute = askLift2 M.execute
 
 -- | See 'M.execute_' for details.
 execute_
-  :: (Member (Lift IO) r, Member MySQL r)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r)
   => M.Query -> Eff r Int64
 execute_ = askLift M.execute_
 
 -- | See 'M.executeMany' for details.
 executeMany
-  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> [p] -> Eff r Int64
 executeMany = askLift2 M.executeMany
 
 -- | See 'M.insertID ' for details.
-insertID :: (Member (Lift IO) r, Member MySQL r) => Eff r Word64
+insertID :: (SetMember Lift (Lift IO) r, Member MySQL r) => Eff r Word64
 insertID = askLift0 M.insertID
 
 -- -- | See 'M.withTransaction' for details.
@@ -120,25 +120,25 @@ insertID = askLift0 M.insertID
 --   => Eff r a -> Eff r a
 
 -- | See 'M.autocommit ' for details.
-autocommit :: (Member (Lift IO ) r, Member MySQL r) => Bool -> Eff r ()
+autocommit :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Bool -> Eff r ()
 autocommit = askLift M.autocommit
 
 -- | See 'M.commit ' for details.
-commit :: (Member (Lift IO ) r, Member MySQL r) => Eff r ()
+commit :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Eff r ()
 commit = askLift0 M.commit
 
 -- | See 'M.rollback ' for details.
-rollback :: (Member (Lift IO ) r, Member MySQL r) => Eff r ()
+rollback :: (SetMember Lift (Lift IO ) r, Member MySQL r) => Eff r ()
 rollback = askLift0 M.rollback
 
 -- | See 'M.formatMany' for details.
 formatMany
-  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> [p] -> Eff r ByteString
 formatMany = askLift2 M.formatMany
 
 -- | See 'M.formatQuery' for details.
 formatQuery
-  :: (Member (Lift IO) r, Member MySQL r, M.QueryParams p)
+  :: (SetMember Lift (Lift IO) r, Member MySQL r, M.QueryParams p)
   => M.Query -> p -> Eff r ByteString
 formatQuery = askLift2 M.formatQuery
