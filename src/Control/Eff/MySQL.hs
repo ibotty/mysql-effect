@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE StandaloneDeriving #-}
 -- | A thin MySQL effect.
 --
 -- See the documentation of 'mysql-simple' for details regarding the
