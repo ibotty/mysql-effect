@@ -22,7 +22,7 @@ library
   -- other-extensions:    
   build-depends:       base >=4.6 && <4.8
                      , bytestring 
-                     , extensible-effects ==1.5.* || ==1.7.*
+                     , extensible-effects ==1.4.* || ==1.7.*
                      , mysql-simple >=0.2 && <0.3
                      , mysql >=0.1.1.6
   hs-source-dirs:      src
