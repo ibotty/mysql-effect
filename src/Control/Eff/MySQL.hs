@@ -5,7 +5,8 @@
 -- See the documentation of 'mysql-simple' for details regarding the
 -- various functions.
 module Control.Eff.MySQL
-  ( query
+  ( MySQL
+  , query
   , query_
   -- , fold
   -- , fold_
