@@ -20,7 +20,7 @@ library
   exposed-modules:     Control.Eff.MySQL
   other-modules:       Control.Eff.MySQL.Helper
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.8
+  build-depends:       base >=4.6 && <4.9
                      , bytestring 
                      , extensible-effects ==1.4.* || ==1.7.* || ==1.9.*
                      , mysql-simple >=0.2 && <0.3
